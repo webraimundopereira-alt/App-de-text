@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WS Finance | Corporate System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
+        :root { --bg: #020408; --primary: #6366f1; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg); color: white; overflow-x: hidden; }
+        .glass { background: rgba(255,255,255,0.02); backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,0.07); }
+        .page { display: none; }
+        .page.active { display: flex; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .btn-main { background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); transition: 0.3s; }
+        .btn-main:active { transform: scale(0.97); opacity: 0.9; }
+        
+        /* Banner Slider */
+        .banner-container { display: flex; transition: transform 0.5s ease-in-out; }
+        .banner-item { min-width: 100%; }
+
+        .scan-anim { position: absolute; width: 100%; height: 2px; background: #6366f1; box-shadow: 0 0 15px #6366f1; animation: scan 2s infinite linear; }
+        @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
+        
+        input, select { background: rgba(255,255,255,0.05) !important; border: 1px solid rgba(255,255,255,0.1) !important; color: white !important; outline: none; }
+    </style>
+</head>
+<body>
+
+    <div id="page-login" class="page active min-h-screen flex-col items-center justify-center p-6">
+        <div class="w-full max-w-md">
+            <header class="text-center mb-8">
+                <div class="inline-block p-4 bg-indigo-500/10 rounded-[30px] mb-4">
+                    <i class="fas fa-chart-pie text-3xl text-indigo-500"></i>
+                </div>
+                <h1 class="text-3xl font-black tracking-tighter">WS FINANCE</h1>
+            </header>
+
+            <div class="relative overflow-hidden rounded-[35px] glass mb-8">
+                <div id="bannerSlider" class="banner-container">
+                    <div class="banner-item p-8 h-40 flex flex-col justify-center">
+                        <span class="text-[10px] font-bold text-indigo-400 uppercase tracking-widest">Investimentos</span>
+                        <h3 class="text-lg font-bold mt-1">Rendimento de 110% do CDI</h3>
+                        <p class="text-slate-500 text-xs mt-1">Seu capital cresce em tempo real.</p>
+                    </div>
+                    <div class="banner-item p-8 h-40 flex flex-col justify-center">
+                        <span class="text-[10px] font-bold text-emerald-400 uppercase tracking-widest">Segurança</span>
+                        <h3 class="text-lg font-bold mt-1">Proteção Biométrica Ativa</h3>
+                        <p class="text-slate-500 text-xs mt-1">Monitoramento de transações 24h.</p>
+                    </div>
+                    <div class="banner-item p-8 h-40 flex flex-col justify-center">
+                        <span class="text-[10px] font-bold text-orange-400 uppercase tracking-widest">Cashback</span>
+                        <h3 class="text-lg font-bold mt-1">Receba 2% em cada Pix</h3>
+                        <p class="text-slate-500 text-xs mt-1">Dinheiro de volta na sua conta.</p>
+                    </div>
+                    <div class="banner-item p-8 h-40 flex flex-col justify-center">
+                        <span class="text-[10px] font-bold text-pink-400 uppercase tracking-widest">Crédito</span>
+                        <h3 class="text-lg font-bold mt-1">Limite Pré-Aprovado</h3>
+                        <p class="text-slate-500 text-xs mt-1">Taxas reduzidas para novos usuários.</p>
+                    </div>
+                    <div class="banner-item p-8 h-40 flex flex-col justify-center">
+                        <span class="text-[10px] font-bold text-purple-400 uppercase tracking-widest">Parceria</span>
+                        <h3 class="text-lg font-bold mt-1">Indique e Ganhe Bônus</h3>
+                        <p class="text-slate-500 text-xs mt-1">Ganhe benefícios por indicações.</p>
+                    </div>
+                </div>
+                <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5">
+                    <div class="w-1.5 h-1.5 rounded-full bg-indigo-500"></div>
+                    <div class="w-1.5 h-1.5 rounded-full bg-white/20"></div>
+                    <div class="w-1.5 h-1.5 rounded-full bg-white/20"></div>
+                    <div class="w-1.5 h-1.5 rounded-full bg-white/20"></div>
+                    <div class="w-1.5 h-1.5 rounded-full bg-white/20"></div>
+                </div>
+            </div>
+
+            <button onclick="nav('page-dash')" class="btn-main w-full py-5 rounded-[28px] font-bold text-lg shadow-2xl shadow-indigo-500/30">
+                ACESSAR MINHA CONTA
+            </button>
+        </div>
+    </div>
+
+    <div id="page-dash" class="page min-h-screen flex-col">
+        <header class="p-6 md:p-10 flex justify-between items-end max-w-5xl mx-auto w-full">
+            <div>
+                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Patrimônio WS</p>
+                <h2 id="saldo-txt" class="text-4xl md:text-5xl font-black">R$ 0,00</h2>
+            </div>
+            <button onclick="nav('page-login')" class="glass w-12 h-12 rounded-2xl flex items-center justify-center">
+                <i class="fas fa-sign-out-alt text-red-500/70"></i>
+            </button>
+        </header>
+
+        <main class="max-w-5xl mx-auto w-full px-6 pb-20 space-y-6">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <button onclick="mod('receber')" class="glass p-6 rounded-[32px] text-center">
+                    <i class="fas fa-qrcode text-indigo-500 text-xl mb-3"></i>
+                    <span class="block text-[10px] font-bold uppercase tracking-widest">QR Code</span>
+                </button>
+                <button onclick="mod('copia')" class="glass p-6 rounded-[32px] text-center">
+                    <i class="fas fa-copy text-emerald-500 text-xl mb-3"></i>
+                    <span class="block text-[10px] font-bold uppercase tracking-widest">Pix Copia</span>
+                </button>
+                <button onclick="mod('scan')" class="glass p-6 rounded-[32px] text-center">
+                    <i class="fas fa-expand text-orange-500 text-xl mb-3"></i>
+                    <span class="block text-[10px] font-bold uppercase tracking-widest">Scanner</span>
+                </button>
+                <button onclick="nav('page-ext')" class="glass p-6 rounded-[32px] text-center">
+                    <i class="fas fa-file-invoice-dollar text-slate-400 text-xl mb-3"></i>
+                    <span class="block text-[10px] font-bold uppercase tracking-widest">Extrato</span>
+                </button>
+            </div>
+
+            <section class="glass p-8 rounded-[40px] space-y-6">
+                <h3 class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Lançamento Financeiro</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <input type="text" id="in-desc" placeholder="Identificação" class="w-full p-4 rounded-2xl">
+                    <input type="number" id="in-val" placeholder="0,00" class="w-full p-4 rounded-2xl">
+                    <select id="in-tipo" class="w-full p-4 rounded-2xl font-bold">
+                        <option value="entrada">Crédito (+)</option>
+                        <option value="saida">Débito (-)</option>
+                    </select>
+                </div>
+                <button onclick="lancar()" class="btn-main w-full py-4 rounded-2xl font-bold">EFETUAR OPERAÇÃO</button>
+            </section>
+        </main>
+    </div>
+
+    <div id="page-ext" class="page min-h-screen flex-col">
+        <header class="p-6 glass flex items-center justify-between sticky top-0 z-30">
+            <button onclick="nav('page-dash')" class="text-indigo-500 font-bold text-sm"><i class="fas fa-chevron-left mr-2"></i> DASHBOARD</button>
+            <h2 class="text-xs font-black uppercase tracking-widest tracking-tighter">Histórico WS</h2>
+            <div class="w-10"></div>
+        </header>
+        <main id="ext-list" class="p-6 space-y-4 max-w-3xl mx-auto w-full">
+            <div class="text-center py-20 text-slate-700 italic text-sm">Sem movimentações pendentes.</div>
+        </main>
+    </div>
+
+    <div id="modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/95 backdrop-blur-lg">
+        <div class="glass max-w-sm w-full rounded-[45px] p-10 flex flex-col items-center">
+            <div id="box-qr" class="hidden bg-white p-4 rounded-3xl mb-6">
+                <div id="qrcode"></div>
+            </div>
+            
+            <div id="box-copy" class="hidden w-full mb-6 text-center">
+                <div class="bg-white/5 p-4 rounded-2xl break-all text-xs font-mono mb-4 border border-white/10" id="pix-code">
+                    WS-FINANCE-PIX-3aed4f-46e5-4f46-8e5f-1234567890
+                </div>
+                <button onclick="copyPix()" class="text-indigo-500 font-bold text-xs uppercase tracking-widest">
+                    <i class="fas fa-clone mr-2"></i> Copiar Código
+                </button>
+            </div>
+
+            <div id="box-scan" class="hidden w-full aspect-square rounded-[35px] overflow-hidden bg-black relative mb-6">
+                <div class="scan-anim"></div>
+                <video id="v-preview" class="w-full h-full object-cover"></video>
+            </div>
+
+            <h3 id="m-title" class="text-xl font-bold"></h3>
+            <p id="m-desc" class="text-slate-500 text-center text-xs mt-2 mb-8"></p>
+            
+            <button onclick="closeMod()" class="w-full py-4 rounded-2xl bg-white/5 font-bold text-xs uppercase tracking-widest">Fechar</button>
+        </div>
+    </div>
+
+    <div id="toast" class="fixed top-10 left-1/2 -translate-x-1/2 z-[100] hidden">
+        <div class="bg-emerald-500 text-white px-8 py-3 rounded-full font-bold text-xs uppercase tracking-widest">
+            Transação Concluída
+        </div>
+    </div>
+
+    <script>
+        let saldo = 0;
+        let historico = [];
+        let stream = null;
+        let currentBanner = 0;
+
+        // Auto Banner Slider
+        setInterval(() => {
+            currentBanner = (currentBanner + 1) % 5;
+            const slider = document.getElementById('bannerSlider');
+            slider.style.transform = `translateX(-${currentBanner * 100}%)`;
+        }, 4000);
+
+        function nav(id) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            window.scrollTo(0,0);
+        }
+
+        function reg(nome, val, tipo) {
+            const v = parseFloat(val);
+            tipo === 'entrada' ? saldo += v : saldo -= v;
+            historico.push({
+                nome, v, tipo,
+                data: new Date().toLocaleDateString('pt-BR'),
+                hora: new Date().toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'})
+            });
+            upd();
+            showToast();
+        }
+
+        function upd() {
+            document.getElementById('saldo-txt').innerText = saldo.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            const list = document.getElementById('ext-list');
+            list.innerHTML = historico.length === 0 ? '<div class="text-center py-20 text-slate-700 italic text-sm">Sem movimentações.</div>' : '';
+            historico.slice().reverse().forEach(t => {
+                list.innerHTML += `
+                    <div class="glass p-5 rounded-[28px] flex justify-between items-center animate-fadeIn">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-xl flex items-center justify-center ${t.tipo === 'entrada' ? 'bg-emerald-500/10 text-emerald-500' : 'bg-red-500/10 text-red-500'}">
+                                <i class="fas ${t.tipo === 'entrada' ? 'fa-plus' : 'fa-minus'} text-[10px]"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm font-bold text-white">${t.nome}</p>
+                                <p class="text-[9px] text-slate-500 font-bold uppercase tracking-widest">${t.data} • ${t.hora}</p>
+                            </div>
+                        </div>
+                        <p class="font-bold text-sm ${t.tipo === 'entrada' ? 'text-emerald-500' : 'text-red-500'}">
+                            ${t.tipo === 'entrada' ? '+' : '-'} R$ ${t.v.toFixed(2)}
+                        </p>
+                    </div>`;
+            });
+        }
+
+        function lancar() {
+            const d = document.getElementById('in-desc'), v = document.getElementById('in-val'), t = document.getElementById('in-tipo');
+            if(!d.value || !v.value) return;
+            reg(d.value, v.value, t.value);
+            d.value = ""; v.value = "";
+        }
+
+        async function mod(acao) {
+            const m = document.getElementById('modal'), bQr = document.getElementById('box-qr'), bCp = document.getElementById('box-copy'), bSc = document.getElementById('box-scan');
+            m.classList.remove('hidden');
+            [bQr, bCp, bSc].forEach(b => b.classList.add('hidden'));
+
+            if(acao === 'receber') {
+                bQr.classList.remove('hidden');
+                document.getElementById('m-title').innerText = "QR Code WS";
+                document.getElementById('m-desc').innerText = "Recebimento instantâneo seguro.";
+                document.getElementById('qrcode').innerHTML = "";
+                new QRCode(document.getElementById('qrcode'), { text: "ws-finance-key", width: 180, height: 180 });
+                setTimeout(() => { if(!m.classList.contains('hidden')){ reg("Transferência Recebida", 500, 'entrada'); closeMod(); } }, 6000);
+            } 
+            else if(acao === 'copia') {
+                bCp.classList.remove('hidden');
+                document.getElementById('m-title').innerText = "Pix Copia e Cola";
+                document.getElementById('m-desc').innerText = "Código de pagamento verificado.";
+            }
+            else if(acao === 'scan') {
+                bSc.classList.remove('hidden');
+                document.getElementById('m-title').innerText = "WS Scanner";
+                document.getElementById('m-desc').innerText = "Efetuar pagamento via código.";
+                try {
+                    stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
+                    document.getElementById('v-preview').srcObject = stream;
+                    document.getElementById('v-preview').play();
+                    setTimeout(() => { if(!m.classList.contains('hidden')){ reg("Pagamento Efetuado", 150, 'saida'); closeMod(); } }, 4000);
+                } catch(e) { closeMod(); alert("Erro de hardware da câmera."); }
+            }
+        }
+
+        function closeMod() {
+            document.getElementById('modal').classList.add('hidden');
+            if(stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
+        }
+
+        function copyPix() {
+            const code = document.getElementById('pix-code').innerText;
+            navigator.clipboard.writeText(code);
+            showToast();
+        }
+
+        function showToast() {
+            const t = document.getElementById('toast');
+            t.classList.remove('hidden');
+            setTimeout(() => t.classList.add('hidden'), 3000);
+        }
+    </script>
+</body>
+</html>
